@@ -1,0 +1,7 @@
+mcp
+httpx
+python-dotenv
+anthropic
+voyageai
+chromadb-client
+newsapi-python
