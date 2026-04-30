@@ -85,14 +85,14 @@ async def analyze_sentiment(text: str) -> str:
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=200,
-        system="You are a sentiment analyzer. Respond ONLY in this JSON format: {\"sentiment\": \"positive|negative|neutral\", \"confidence\": 0.0-1.0, \"reason\": \"one sentence\"}",
+        system="You are a sentiment analyzer. Respond ONLY in this JSON format, DO not wrap response in markdown code fences: {\"sentiment\": \"positive|negative|neutral\", \"confidence\": 0.0-1.0, \"reason\": \"one sentence\"}",
         messages=[{"role": "user", "content": text}],
     )
     return response.content[0].text
 
 @mcp.tool()
 async def search_documents(query: str) -> str:
-    """Retrieve the top matching notes from Chroma using Voyage embeddings.
+    """Retrieve the top matching BanG Dream data from a Chroma collection storing BanG Dream wiki data using Voyage embeddings.
 
     The query is embedded with Voyage and used against the `notes` collection.
     Returns up to three matched documents in a readable numbered format.
