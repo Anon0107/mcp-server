@@ -24,6 +24,12 @@ VOYAGE_API_KEY = os.getenv('VOYAGE_API_KEY')
 
 @mcp.tool()
 async def search_news(query: str, country: str = "my") -> str:
+    """Search recent news by query, preferring top headlines for a country.
+
+    The function first queries NewsAPI top-headlines with a country filter.
+    If no articles are returned, it falls back to the everything endpoint.
+    Returns up to five formatted article summaries as a single string.
+    """
     url = "https://newsapi.org/v2/everything"
     params = {
         "q": query,
@@ -69,6 +75,11 @@ async def search_news(query: str, country: str = "my") -> str:
 
 @mcp.tool()
 async def analyze_sentiment(text: str) -> str:
+    """Analyze input text sentiment via Anthropic and return JSON text.
+
+    The model is instructed to respond with a strict JSON payload containing
+    sentiment, confidence, and a short reason.
+    """
     client = anthropic.Anthropic()
 
     response = client.messages.create(
@@ -81,6 +92,11 @@ async def analyze_sentiment(text: str) -> str:
 
 @mcp.tool()
 async def search_documents(query: str) -> str:
+    """Retrieve the top matching notes from Chroma using Voyage embeddings.
+
+    The query is embedded with Voyage and used against the `notes` collection.
+    Returns up to three matched documents in a readable numbered format.
+    """
     vo = voyageai.Client(api_key=VOYAGE_API_KEY)
     embeddings = vo.embed(query, model = 'voyage-3', input_type = 'query').embeddings
 
@@ -101,6 +117,11 @@ async def search_documents(query: str) -> str:
 
 @mcp.tool()
 async def get_weather(city: str) -> str:
+    """Get a one-day weather summary for a city.
+
+    The function first asks Anthropic for city coordinates, then queries
+    Open-Meteo for today's weather code and min/max temperatures.
+    """
     client = anthropic.Anthropic()
 
     response = client.messages.create(
